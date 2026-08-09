@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:pro_todo/core/routing/app_router.dart';
+import 'package:pro_todo/core/routing/routes.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.appRouter});
+  final AppRouter appRouter;
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: null,
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: appRouter.appRouter,
+      initialRoute: Routes.splashRoute,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+      ),
     );
   }
 }
