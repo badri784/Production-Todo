@@ -12,6 +12,7 @@ class AppTheme {
         secondary: AppColors.accent,
         surface: AppColors.surface,
         error: AppColors.error,
+        
       ),
 
       // Input Decoration (TextFields)
