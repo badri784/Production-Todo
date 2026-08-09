@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomElevatedButton extends StatelessWidget {
-  const CustomElevatedButton({
+class CutsomElevatedBottonWithIcon extends StatelessWidget {
+  const CutsomElevatedBottonWithIcon({
     super.key,
     required this.text,
     this.onPressed,
@@ -10,22 +10,22 @@ class CustomElevatedButton extends StatelessWidget {
     this.borderRadius = 8,
     this.customTextStyle,
     this.border,
+    required this.iconWidget,
   });
-  final Widget text;
+  final String text;
   final VoidCallback? onPressed;
   final Color backgroundColor;
   final Color textColor;
   final double borderRadius;
   final TextStyle? customTextStyle;
   final BorderSide? border;
+  final Widget iconWidget;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return ElevatedButton.icon(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.only(top: 17, bottom: 17),
-
         backgroundColor: backgroundColor,
         foregroundColor: textColor,
         shape: RoundedRectangleBorder(
@@ -33,7 +33,8 @@ class CustomElevatedButton extends StatelessWidget {
         ),
         side: border,
       ),
-      child: text,
+      icon: iconWidget,
+      label: Text(text, style: customTextStyle),
     );
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:pro_todo/core/helpers/font_weight.dart';
-import 'package:pro_todo/feature/widget/custom_text_form_field.dart';
+import 'package:pro_todo/feature/screens/auth/login_screen/widgets/login_header.dart';
+import 'package:pro_todo/feature/screens/auth/login_screen/widgets/login_form_fields.dart';
+import 'package:pro_todo/feature/screens/auth/login_screen/widgets/login_buttons.dart';
+import 'package:pro_todo/feature/screens/auth/login_screen/widgets/sign_up_text.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -9,30 +10,27 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(right: 25, left: 25),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-
-            children: [
-              Image.asset('assets/icon/icon_login.png'),
-              Text(
-                'Welcome Back.',
-                style: GoogleFonts.nunitoSans(
-                  fontSize: 32,
-                  fontWeight: FontWeightHelper.extraBold,
-                ),
-              ),
-              Text(
-                'Sign in to continue to FocusFlow..',
-                style: GoogleFonts.nunitoSans(
-                  fontSize: 14,
-                  fontWeight: FontWeightHelper.regular,
-                ),
-              ),
-              const CustomTextFormField(),
-            ],
+      backgroundColor: const Color(0xfff9f9f9),
+      body: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+        ),
+        child: const Padding(
+          padding: EdgeInsets.only(right: 25, left: 25),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                LoginHeader(),
+                SizedBox(height: 16),
+                LoginFormFields(),
+                SizedBox(height: 25),
+                LoginButtons(),
+                SizedBox(height: 16),
+                SignUpText(),
+              ],
+            ),
           ),
         ),
       ),

@@ -14,7 +14,7 @@ class ElevatedInSplashScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CustomElevatedButton(
-          text: 'Get Started',
+          text: const Text('Get Started'),
           onPressed: () {
             context.pushReplacementName(Routes.signUpRoute);
           },
@@ -32,7 +32,7 @@ class ElevatedInSplashScreen extends StatelessWidget {
             fontWeight: FontWeightHelper.bold,
             color: const Color(0xff154212),
           ),
-          text: 'I already have an account',
+          text: const Text('I already have an account'),
           onPressed: () {
             context.pushReplacementName(Routes.loginRoute);
           },
