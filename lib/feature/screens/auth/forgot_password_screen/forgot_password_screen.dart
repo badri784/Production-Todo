@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pro_todo/feature/screens/auth/sign_up_screen/widgets/sign_up_header.dart';
-import 'package:pro_todo/feature/screens/auth/sign_up_screen/widgets/sign_up_form_fields.dart';
-import 'package:pro_todo/feature/screens/auth/sign_up_screen/widgets/sign_up_buttons.dart';
-import 'package:pro_todo/feature/screens/auth/sign_up_screen/widgets/login_text.dart';
+import 'package:pro_todo/feature/screens/auth/forgot_password_screen/widgets/forgot_password_header.dart';
+import 'package:pro_todo/feature/screens/auth/forgot_password_screen/widgets/forgot_password_form_field.dart';
+import 'package:pro_todo/feature/screens/auth/forgot_password_screen/widgets/forgot_password_button.dart';
 
-class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+class ForgotPasswordScreen extends StatelessWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +21,11 @@ class SignUpScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SignUpHeader(),
+                ForgotPasswordHeader(),
                 SizedBox(height: 30),
-                SignUpFormFields(),
+                ForgotPasswordFormField(),
                 SizedBox(height: 25),
-                SignUpButtons(),
-                SizedBox(height: 25),
-                LoginText(),
+                ForgotPasswordButton(),
               ],
             ),
           ),
@@ -37,4 +34,3 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 }
-

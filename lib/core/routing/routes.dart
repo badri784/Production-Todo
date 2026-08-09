@@ -4,5 +4,6 @@ class Routes {
   static const String authRoute = 'AuthScreen';
   static const String loginRoute = 'LoginScreen';
   static const String signUpRoute = 'SignUpScreen';
+  static const String forgotPasswordRoute = 'ForgotPasswordScreen';
   // static const String onBoardingRoute = 'OnBoardingScreen';
 }
