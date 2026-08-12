@@ -33,6 +33,7 @@ class ElevatedInSplashScreen extends StatelessWidget {
             color: const Color(0xff154212),
           ),
           text: const Text('I already have an account'),
+          textColor: const Color(0xff154212),
           onPressed: () {
             context.pushReplacementName(Routes.loginRoute);
           },

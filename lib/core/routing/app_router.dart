@@ -4,6 +4,7 @@ import 'package:pro_todo/feature/screens/auth/login_screen/login_screen.dart';
 import 'package:pro_todo/feature/screens/auth/sign_up_screen/sign_up_screen.dart';
 import 'package:pro_todo/feature/screens/auth/splash_screen/splash_screen.dart';
 import 'package:pro_todo/feature/screens/auth/forgot_password_screen/forgot_password_screen.dart';
+import 'package:pro_todo/feature/screens/home/home_screen.dart';
 
 class AppRouter {
   Route appRouter(RouteSettings routeSettings) {
@@ -15,7 +16,11 @@ class AppRouter {
       case Routes.signUpRoute:
         return MaterialPageRoute(builder: (context) => const SignUpScreen());
       case Routes.forgotPasswordRoute:
-        return MaterialPageRoute(builder: (context) => const ForgotPasswordScreen());
+        return MaterialPageRoute(
+          builder: (context) => const ForgotPasswordScreen(),
+        );
+      case Routes.homeRoute:
+        return MaterialPageRoute(builder: (context) => const HomeScreen());
       default:
         return MaterialPageRoute(
           builder: (context) =>

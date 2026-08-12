@@ -6,13 +6,21 @@ import 'package:pro_todo/core/routing/routes.dart';
 import 'package:pro_todo/feature/widget/custom_text_form_field.dart';
 
 class LoginFormFields extends StatelessWidget {
-  const LoginFormFields({super.key});
+  const LoginFormFields({
+    super.key,
+    required this.emailController,
+    required this.passwordController,
+  });
+
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         CustomTextFormField(
+          controller: emailController,
           hintText: 'Email address',
           outLienBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -21,6 +29,7 @@ class LoginFormFields extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         CustomTextFormField(
+          controller: passwordController,
           hintText: 'Password',
           obscureText: true,
           outLienBorder: OutlineInputBorder(

@@ -12,11 +12,7 @@ class SignUpHeader extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.check_circle_outline,
-              color: Color(0xff154212),
-              size: 28,
-            ),
+            Image.asset('assets/icon/icon_login.png'),
             const SizedBox(width: 8),
             Text(
               'FocusFlow',

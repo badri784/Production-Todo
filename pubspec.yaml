@@ -43,6 +43,10 @@ dependencies:
   hive: ^2.2.3
   font_awesome_flutter: ^11.0.0
   flutter_bloc: ^9.1.1
+  firebase_auth: ^6.5.7
+  google_sign_in: ^7.2.0
+  get_it: ^9.2.1
+  cloud_firestore: ^6.8.0
 
 dev_dependencies:
   flutter_test:
