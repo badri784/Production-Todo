@@ -1,4 +1,6 @@
-class NoteModel {
+import 'package:equatable/equatable.dart';
+
+class NoteModel extends Equatable {
   final String? noteId;
   final String? noteTitle;
   final String? noteDiscription;
@@ -10,4 +12,7 @@ class NoteModel {
     this.noteDiscription,
     this.createdAt,
   });
+
+  @override
+  List<Object?> get props => [noteId, noteTitle, noteDiscription, createdAt];
 }
