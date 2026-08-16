@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 
-class NoteModel extends Equatable {
+class TaskModel extends Equatable {
   final String? noteId;
   final String? noteTitle;
   final String? noteDiscription;
   final DateTime? createdAt;
 
-  const NoteModel({
+  const TaskModel({
     this.noteId,
     this.noteTitle,
     this.noteDiscription,
