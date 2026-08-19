@@ -1,13 +1,17 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pro_todo/feature/screens/note_screen/cubit/note_state_cubit.dart';
+import 'package:pro_todo/feature/screens/note_screen/widget/note_screen_body.dart';
 
 class NoteScreen extends StatelessWidget {
   const NoteScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Note Screen title')),
-      body: const Center(child: Text('Note Screen body')),
+    return BlocProvider(
+      create: (context) => NoteStateCubit(),
+      child: const NoteScreenBody(),
     );
   }
 }
