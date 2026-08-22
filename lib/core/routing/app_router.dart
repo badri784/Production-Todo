@@ -5,6 +5,7 @@ import 'package:pro_todo/feature/screens/auth/sign_up_screen/sign_up_screen.dart
 import 'package:pro_todo/feature/screens/auth/splash_screen/splash_screen.dart';
 import 'package:pro_todo/feature/screens/auth/forgot_password_screen/forgot_password_screen.dart';
 import 'package:pro_todo/feature/screens/home/widget/navigation_bar.dart';
+import 'package:pro_todo/feature/screens/task_screen.dart/add_task_screen/add_task_screen.dart';
 
 class AppRouter {
   Route appRouter(RouteSettings routeSettings) {
@@ -21,6 +22,8 @@ class AppRouter {
         );
       case Routes.homeRoute:
         return MaterialPageRoute(builder: (context) => const AppNavigationBar());
+        case Routes.addTaskScreen:
+        return MaterialPageRoute(builder: (context) => const AddTaskScreen());
       default:
         return MaterialPageRoute(
           builder: (context) =>

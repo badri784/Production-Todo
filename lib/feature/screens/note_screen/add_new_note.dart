@@ -6,7 +6,7 @@ import 'package:pro_todo/core/model/node_model.dart';
 import 'package:pro_todo/core/theme/app_colors.dart';
 import 'package:pro_todo/feature/screens/note_screen/cubit/note_state_cubit.dart';
 import 'package:pro_todo/feature/screens/note_screen/widget/action_buttons.dart';
-import 'package:pro_todo/feature/screens/note_screen/widget/date_picker_row.dart';
+import 'package:pro_todo/feature/widget/date_picker_row.dart';
 import 'package:pro_todo/feature/screens/note_screen/widget/detected_entities_section.dart';
 import 'package:pro_todo/feature/screens/note_screen/widget/drag_handle.dart';
 import 'package:pro_todo/feature/screens/note_screen/widget/mic_listening_section.dart';
