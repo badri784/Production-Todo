@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:pro_todo/core/model/task_model.dart';
 import 'package:pro_todo/core/theme/app_colors.dart';
-import 'package:pro_todo/feature/widget/date_picker_row.dart';
-import 'package:pro_todo/feature/widget/custom_text_form_field.dart';
+import 'package:pro_todo/feature/screens/task_screen.dart/cubit/task_cubit.dart';
+import 'package:pro_todo/feature/screens/task_screen.dart/add_task_screen/widget/add_task_form.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -14,6 +15,17 @@ class AddTaskScreen extends StatefulWidget {
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   DateTime? _selectedDate;
+  bool _hasReminder = false;
+  final _formKey = GlobalKey<FormState>();
+  final _taskTitleController = TextEditingController();
+  final _taskDescriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    _taskTitleController.dispose();
+    _taskDescriptionController.dispose();
+    super.dispose();
+  }
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
@@ -21,13 +33,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     final tomorrow = today.add(const Duration(days: 1));
     final picked = DateTime(date.year, date.month, date.day);
 
-    if (picked == today) {
-      return 'Today';
-    } else if (picked == tomorrow) {
-      return 'Tomorrow';
-    } else {
-      return DateFormat('MMM d, yyyy').format(date);
-    }
+    if (picked == today) return 'Today';
+    if (picked == tomorrow) return 'Tomorrow';
+    return DateFormat('MMM d, yyyy').format(date);
   }
 
   Future<void> _pickDate() async {
@@ -51,104 +59,75 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       },
     );
     if (picked != null) {
-      setState(() {
-        _selectedDate = picked;
-      });
+      setState(() => _selectedDate = picked);
     }
+  }
+
+  void _onSave() {
+    if (!_formKey.currentState!.validate()) return;
+    context.read<TaskCubit>().saveTask(
+      TaskModel(
+        taskTitle: _taskTitleController.text,
+        taskDiscription: _taskDescriptionController.text,
+        hasReminder: _hasReminder,
+        isCompleted: false,
+        createdAt: DateTime.now(),
+        reminderTime: _selectedDate,
+      ),
+    );
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    bool value = false;
     return Scaffold(
       appBar: AppBar(
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20),
             child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: _onSave,
               icon: const Icon(Icons.done_outline),
             ),
           ),
         ],
         title: const Text('New Task'),
       ),
-
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            CustomTextFormField(
-              maxLines: 2,
-              maxlenght: 50,
-              hintText: 'Task Title: ',
-              outLienBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+      body: BlocListener<TaskCubit, TaskState>(
+        listener: (context, state) {
+          if (state is TaskError) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text('Error'),
+                content: Text(state.message),
               ),
-            ),
-            const Gap(8),
-            CustomTextFormField(
-              maxLines: 5,
-              maxlenght: 500,
-              hintText: 'Task Description: ',
-              outLienBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            const Gap(8),
-            DatePickerRow(
-              selectedDate: _selectedDate,
-              formattedDate: _selectedDate != null
-                  ? _formatDate(_selectedDate!)
-                  : null,
-              onTap: _pickDate,
-              onClear: () {
-                setState(() {
-                  _selectedDate = null;
-                });
-              },
-            ),
-            const Gap(8),
-            Card.outlined(
-              child: ListTile(
-                title: const Text('Set Reminder'),
-                leading: const CircleAvatar(
-                  backgroundColor: Color(0xffe6e8e4),
-                  child: Icon(
-                    Icons.notifications_none,
-                    color: AppColors.primary,
-                  ),
+            );
+          }
+        },
+        child: AddTaskForm(
+          formKey: _formKey,
+          taskTitleController: _taskTitleController,
+          taskDescriptionController: _taskDescriptionController,
+          selectedDate: _selectedDate,
+          formattedDate: _selectedDate != null
+              ? _formatDate(_selectedDate!)
+              : null,
+          hasReminder: _hasReminder,
+          onPickDate: _pickDate,
+          onClearDate: () => setState(() => _selectedDate = null),
+          onReminderChanged: (val) => setState(() => _hasReminder = val),
+          onPickTime: () {
+           showDialog(
+              context: context,
+              builder: (context) => TimePickerDialog(
+                  initialTime: TimeOfDay.now(),
+                  confirmText: 'Confirmed',
+                  cancelText: 'Now',
+                  initialEntryMode: TimePickerEntryMode.input,
                 ),
-                trailing: Switch(
-                  value: value,
-                  onChanged: (val) {
-                    setState(() {
-                      value = val;
-                    });
-                  },
-                ),
-                subtitle: GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return TimePickerDialog(initialTime: TimeOfDay.now());
-                      },
-                    );
-                  },
-                  child: const Row(
-                    children: [
-                      Icon(Icons.access_time),
-                      Gap(5),
-                      Text('Pick A Time'),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

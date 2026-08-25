@@ -6,7 +6,6 @@ class TaskModel extends Equatable {
   final String? taskTitle;
   final String? taskDiscription;
   final DateTime? createdAt;
-  final DateTime? dueDate;
   final bool? hasReminder;
   final DateTime? reminderTime;
   final bool? isCompleted;
@@ -16,7 +15,6 @@ class TaskModel extends Equatable {
     this.taskTitle,
     this.taskDiscription,
     this.createdAt,
-    this.dueDate,
     this.hasReminder,
     this.reminderTime,
     this.isCompleted,
@@ -28,7 +26,6 @@ class TaskModel extends Equatable {
     taskTitle,
     taskDiscription,
     createdAt,
-    dueDate,
     hasReminder,
     reminderTime,
     isCompleted,
