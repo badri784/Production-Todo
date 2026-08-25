@@ -13,6 +13,8 @@ class CustomTextFormField extends StatelessWidget {
     this.maxLines,
     this.labelText,
     this.maxlenght,
+    this.filled,
+    this.fillColor,
   });
   final String? Function(String?)? validator;
   final TextEditingController? controller;
@@ -24,6 +26,8 @@ class CustomTextFormField extends StatelessWidget {
   final int? maxLines;
   final String? labelText;
   final int? maxlenght;
+  final bool? filled;
+  final Color? fillColor;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -37,14 +41,29 @@ class CustomTextFormField extends StatelessWidget {
       maxLength: maxlenght,
       decoration: InputDecoration(
         labelText: labelText,
-        errorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
+        filled: filled ?? false,
+        fillColor: fillColor,
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red),
+          borderRadius: outLienBorder?.borderRadius ?? BorderRadius.circular(4),
         ),
-
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue),
+        focusedBorder: OutlineInputBorder(
+          borderSide: filled == true
+              ? BorderSide.none
+              : const BorderSide(color: Colors.blue),
+          borderRadius: outLienBorder?.borderRadius ?? BorderRadius.circular(4),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: filled == true
+              ? BorderSide.none
+              : const BorderSide(color: Colors.grey),
+          borderRadius: outLienBorder?.borderRadius ?? BorderRadius.circular(4),
         ),
         hintText: hintText,
+        hintStyle: TextStyle(
+          color: Colors.grey.shade500,
+          fontWeight: FontWeight.w400,
+        ),
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
         border: outLienBorder,

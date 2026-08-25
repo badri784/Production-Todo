@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pro_todo/feature/screens/home/home_screen.dart';
 import 'package:pro_todo/feature/screens/note_screen/note_screen.dart';
 import 'package:pro_todo/feature/screens/profile/profile_screen.dart';
-import 'package:pro_todo/feature/screens/todo_screen.dart/todo_screen.dart';
+import 'package:pro_todo/feature/screens/task_screen.dart/todo_screen.dart';
 
 
 class AppNavigationBar extends StatefulWidget {
