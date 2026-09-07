@@ -9,7 +9,6 @@ Future<void> setupDependanceInjection() async {
   Dio dio = Dio();
 
   getIt.registerLazySingleton<LoginService>(() => LoginRepo());
-
   dio.options.connectTimeout = const Duration(seconds: 10);
   dio.options.receiveTimeout = const Duration(seconds: 10);
 }

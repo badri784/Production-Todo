@@ -1,10 +1,16 @@
-import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
+part 'node_model.g.dart';
 
-class NoteModel extends Equatable {
+@HiveType(typeId: 0)
+class NoteModel extends HiveObject {
+  @HiveField(0)
   final String noteId;
+  @HiveField(1)
   final String? noteTitle;
+  @HiveField(2)
   final String? noteDescription;
+  @HiveField(3)
   final DateTime? createdAt;
 
   NoteModel({
@@ -13,7 +19,4 @@ class NoteModel extends Equatable {
     this.noteDescription,
     this.createdAt,
   }) : noteId = noteId ?? const Uuid().v4();
-
-  @override
-  List<Object?> get props => [noteId, noteTitle, noteDescription, createdAt];
 }

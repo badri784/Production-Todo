@@ -1,13 +1,23 @@
-import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
-class TaskModel extends Equatable {
+part 'task_model.g.dart';
+
+@HiveType(typeId: 1)
+class TaskModel extends HiveObject {
+  @HiveField(0)
   final String taskId;
+  @HiveField(1)
   final String? taskTitle;
+  @HiveField(2)
   final String? taskDiscription;
+  @HiveField(3)
   final DateTime? createdAt;
+  @HiveField(4)
   final bool? hasReminder;
+  @HiveField(5)
   final DateTime? reminderTime;
+  @HiveField(6)
   final bool? isCompleted;
 
   TaskModel({
@@ -19,15 +29,4 @@ class TaskModel extends Equatable {
     this.reminderTime,
     this.isCompleted,
   }) : taskId = taskId ?? const Uuid().v4();
-
-  @override
-  List<Object?> get props => [
-    taskId,
-    taskTitle,
-    taskDiscription,
-    createdAt,
-    hasReminder,
-    reminderTime,
-    isCompleted,
-  ];
 }
