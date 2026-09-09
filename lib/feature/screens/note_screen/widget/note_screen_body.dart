@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -14,42 +13,42 @@ import 'package:pro_todo/feature/widget/floating_action_bottom_widget.dart';
 class NoteScreenBody extends StatelessWidget {
   const NoteScreenBody({super.key});
 
+  void onPressed(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) {
+        return BlocProvider.value(
+          value: context.read<NoteStateCubit>(),
+          child: const SingleChildScrollView(child: AddNewNote()),
+        );
+      },
+    );
+  }
+
+  Widget searchField(BuildContext context) {
+    return TextField(
+      onChanged: (value) {
+        context.read<NoteStateCubit>().searchNote(value);
+        log(value);
+      },
+      decoration: const InputDecoration(
+        hintText: 'Search note',
+        prefixIcon: Icon(Icons.search),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    void onPressed() {
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.white,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        builder: (_) {
-          return BlocProvider.value(
-            value: context.read<NoteStateCubit>(),
-            child: const SingleChildScrollView(child: AddNewNote()),
-          );
-        },
-      );
-    }
-
-    Widget searchField() {
-      return TextField(
-        onChanged: (value) {
-          context.read<NoteStateCubit>().searchNote(value);
-          log(value);
-        },
-        decoration: const InputDecoration(
-          hintText: 'Search note',
-          prefixIcon: Icon(Icons.search),
-        ),
-      );
-    }
-
     return Scaffold(
       floatingActionButton: FloatingActionBottomWidget(
         icon: Icons.mic,
-        onPressed: onPressed,
+        onPressed: () => onPressed(context),
       ),
       appBar: AppBar(
         title: const Text('Your Notes'),
@@ -59,7 +58,7 @@ class NoteScreenBody extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: IconButton(
-              onPressed: searchField,
+              onPressed: () => searchField(context),
               icon: const Icon(Icons.search),
             ),
           ),
@@ -129,4 +128,3 @@ class NoteScreenBody extends StatelessWidget {
     );
   }
 }
-

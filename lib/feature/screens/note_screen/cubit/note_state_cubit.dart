@@ -12,6 +12,17 @@ class NoteStateCubit extends Cubit<NoteStateState> {
   static const String noteBoxName = 'note';
   final noteBox = Hive.box<NoteModel>(noteBoxName);
 
+  void loadNote(NoteModel nodeModel) {
+    try {
+      emit(NoteStateLoading());
+      final loadedNotes = noteBox.values.toList();
+      notes.addAll(loadedNotes);
+      emit(NoteStateSuccess(nodeModels: notes));
+    } catch (massage) {
+      emit(NoteStateError(message: massage.toString()));
+    }
+  }
+
   void saveNote(NoteModel nodeModel) async {
     try {
       emit(NoteStateLoading());

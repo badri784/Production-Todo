@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:pro_todo/core/helpers/font_weight.dart';
 import 'package:pro_todo/core/model/node_model.dart';
 import 'package:pro_todo/core/theme/app_colors.dart';
+import 'package:pro_todo/feature/screens/note_screen/widget/edit_and_delete_note.dart';
 
 class NoteCard extends StatelessWidget {
   const NoteCard({super.key, required this.note});
@@ -26,7 +27,6 @@ class NoteCard extends StatelessWidget {
       child: IntrinsicHeight(
         child: Row(
           children: [
-            // ── Green left accent bar ──
             Container(
               width: 4,
               decoration: const BoxDecoration(
@@ -38,7 +38,6 @@ class NoteCard extends StatelessWidget {
               ),
             ),
 
-            // ── Card content ──
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -49,19 +48,37 @@ class NoteCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ── Title ──
-                    Text(
-                      note.noteTitle ?? '',
-                      style: GoogleFonts.nunitoSans(
-                        fontSize: 17,
-                        fontWeight: FontWeightHelper.bold,
-                        color: AppColors.textPrimary,
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Text(
+                            note.noteTitle ?? '',
+                            style: GoogleFonts.nunitoSans(
+                              fontSize: 17,
+                              fontWeight: FontWeightHelper.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return SingleChildScrollView(
+                                    child: EditAndDeletNote(note: note),
+                                  );
+                                },
+                              );
+                            },
+                            icon: const Icon(Icons.more_vert),
+                          ),
+                        ],
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 6),
-
-                    // ── Description ──
                     Text(
                       note.noteDescription ?? '',
                       style: GoogleFonts.nunitoSans(
