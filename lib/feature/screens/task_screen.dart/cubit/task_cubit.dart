@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:pro_todo/core/model/task_model.dart';
 
 part 'task_state.dart';
@@ -6,15 +7,24 @@ part 'task_state.dart';
 class TaskCubit extends Cubit<TaskState> {
   TaskCubit() : super(TaskInitial());
   final List<TaskModel> taskModelList = [];
-
-  void loadTasks() {
-    emit(TaskSuccess(taskModelList: List.from(taskModelList)));
+  static const String taskBoxName = 'task';
+  final taskBox = Hive.box<TaskModel>(taskBoxName);
+  void loadNote() {
+    try {
+      emit(TaskLoading());
+      final loadedTask = taskBox.values.toList();
+      taskModelList.addAll(loadedTask);
+      emit(TaskSuccess(taskModelList: List.from(taskModelList)));
+    } catch (massage) {
+      emit(TaskError(message: massage.toString()));
+    }
   }
 
   void saveTask(TaskModel taskModel) {
     try {
       emit(TaskLoading());
       taskModelList.add(taskModel);
+      taskBox.put(taskModel.taskId, taskModel);
       emit(TaskSuccess(taskModelList: List.from(taskModelList)));
     } catch (e) {
       emit(TaskError(message: e.toString()));
@@ -44,6 +54,7 @@ class TaskCubit extends Cubit<TaskState> {
   void deleteTask(String taskId) {
     try {
       taskModelList.removeWhere((t) => t.taskId == taskId);
+      taskBox.delete(taskId);
       emit(TaskSuccess(taskModelList: List.from(taskModelList)));
     } catch (e) {
       emit(TaskError(message: e.toString()));

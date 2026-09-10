@@ -12,8 +12,8 @@ class TodoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: TaskCubit()..loadTasks(),
+    return BlocProvider(
+      create: (context) => TaskCubit()..loadNote(),
       child: Scaffold(
         backgroundColor: AppColors.background,
         floatingActionButton: Builder(
@@ -22,10 +22,7 @@ class TodoScreen extends StatelessWidget {
               backgroundColor: AppColors.primary,
               onPressed: () async {
                 final cubit = context.read<TaskCubit>();
-                await context.pushnamed(
-                  Routes.addTaskScreen,
-                  arguments: cubit,
-                );
+                await context.pushnamed(Routes.addTaskScreen, arguments: cubit);
               },
               child: const Icon(Icons.add, color: Colors.white),
             );

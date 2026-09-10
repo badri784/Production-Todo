@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pro_todo/core/helpers/font_weight.dart';
 import 'package:pro_todo/core/model/node_model.dart';
 import 'package:pro_todo/core/theme/app_colors.dart';
+import 'package:pro_todo/feature/screens/note_screen/cubit/note_state_cubit.dart';
 import 'package:pro_todo/feature/screens/note_screen/widget/edit_and_delete_note.dart';
 
 class NoteCard extends StatelessWidget {
@@ -64,11 +66,15 @@ class NoteCard extends StatelessWidget {
                           const Spacer(),
                           IconButton(
                             onPressed: () {
+                              final cubit = context.read<NoteStateCubit>();
                               showModalBottomSheet(
                                 context: context,
-                                builder: (context) {
-                                  return SingleChildScrollView(
-                                    child: EditAndDeletNote(note: note),
+                                builder: (_) {
+                                  return BlocProvider.value(
+                                    value: cubit,
+                                    child: SingleChildScrollView(
+                                      child: EditAndDeletNote(note: note),
+                                    ),
                                   );
                                 },
                               );

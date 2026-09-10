@@ -27,7 +27,7 @@ class NoteStateCubit extends Cubit<NoteStateState> {
     try {
       emit(NoteStateLoading());
       notes.add(nodeModel);
-      await noteBox.add(nodeModel);
+      await noteBox.put(nodeModel.noteId, nodeModel);
       emit(NoteStateSuccess(nodeModels: notes));
       log(nodeModel.noteTitle.toString());
     } catch (massage) {
@@ -37,9 +37,8 @@ class NoteStateCubit extends Cubit<NoteStateState> {
 
   void deleteNote(String noteId) async {
     try {
-      emit(NoteStateLoading());
-      notes.removeWhere((note) => note.noteId == noteId);
       await noteBox.delete(noteId);
+      notes.removeWhere((note) => note.noteId == noteId);
       emit(NoteStateSuccess(nodeModels: notes));
     } catch (massage) {
       emit(NoteStateError(message: massage.toString()));

@@ -20,7 +20,7 @@ class EditAndDeletNote extends StatelessWidget {
           NoteInfoHeader(note: note),
           const SizedBox(height: 12),
           const Divider(color: Color(0xffebefea)),
-          const NoteActionList(),
+           NoteActionList(note: note),
           const SizedBox(height: 50),
         ],
       ),

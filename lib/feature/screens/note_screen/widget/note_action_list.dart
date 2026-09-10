@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pro_todo/core/model/node_model.dart';
+import 'package:pro_todo/feature/screens/note_screen/cubit/note_state_cubit.dart';
+import 'package:pro_todo/feature/screens/note_screen/widget/delete_alart.dart';
 import 'package:pro_todo/feature/screens/note_screen/widget/list_tile_widget.dart';
 
 class NoteActionList extends StatelessWidget {
-  const NoteActionList({super.key});
+  const NoteActionList({super.key, required this.note});
+  final NoteModel note;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +47,18 @@ class NoteActionList extends StatelessWidget {
         ),
         const Divider(color: Color(0xffebefea)),
         ListTileWidget(
-          onTap: () {},
+          onTap: () async {
+            final cubit = context.read<NoteStateCubit>();
+            await showDialog(
+              context: context,
+              builder: (_) {
+                return BlocProvider.value(
+                  value: cubit,
+                  child: DeleteAlart(note: note),
+                );
+              },
+            );
+          },
           color: const Color(0xffffdad6),
           title: const Text('Delete Note'),
           leading: const Icon(Icons.delete, size: 20, color: Colors.red),
