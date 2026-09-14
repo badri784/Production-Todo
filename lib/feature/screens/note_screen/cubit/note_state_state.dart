@@ -18,5 +18,11 @@ final class NoteStateSuccess extends NoteStateState {
 final class NoteStateError extends NoteStateState {
   final String message;
   const NoteStateError({required this.message});
+}
+final class NoteStateListening extends NoteStateState {
 
+  const NoteStateListening();
+}
+final class NoteStateStoping extends NoteStateState {
+  const NoteStateStoping();
 }

@@ -76,6 +76,7 @@ class _AddNewNoteState extends State<AddNewNote> {
 
   @override
   Widget build(BuildContext context) {
+    bool cubit = context.read<NoteStateCubit>().isListening;
     return Padding(
       padding: EdgeInsets.only(
         left: 20.0,
@@ -96,11 +97,24 @@ class _AddNewNoteState extends State<AddNewNote> {
             // ── Mic / Listening Row ──
             MicListeningSection(
               onMicTap: () {
-                // TODO: integrate speech-to-text
+                cubit
+                    ? context.read<NoteStateCubit>().stopListening()
+                    : context.read<NoteStateCubit>().startListening();
+                setState(() {});
               },
             ),
             const Gap(20),
-
+            BlocBuilder<NoteStateCubit, NoteStateState>(
+              builder: (context, state) {
+                if (state is NoteStateListening) {
+                  return Text(
+                    'last words = ${context.read<NoteStateCubit>().lastWords}',
+                  );
+                }
+                return const Text('Not Listening...');
+              },
+            ),
+            const Gap(20),
             // ── Title Field ──
             CustomTextFormField(
               controller: _titleController,

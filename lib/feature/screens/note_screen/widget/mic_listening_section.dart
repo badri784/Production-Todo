@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pro_todo/core/helpers/font_weight.dart';
 import 'package:pro_todo/core/theme/app_colors.dart';
+import 'package:pro_todo/feature/screens/note_screen/cubit/note_state_cubit.dart';
 
-class MicListeningSection extends StatelessWidget {
+class MicListeningSection extends StatefulWidget {
   const MicListeningSection({super.key, this.onMicTap});
 
   final VoidCallback? onMicTap;
 
   @override
+  State<MicListeningSection> createState() => _MicListeningSectionState();
+}
+
+class _MicListeningSectionState extends State<MicListeningSection> {
+  @override
   Widget build(BuildContext context) {
+    final bool cubsit = context.read<NoteStateCubit>().isListening;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -24,7 +32,9 @@ class MicListeningSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Listening...',
+                  cubsit
+                      ? 'Listening... Tap To Stop'
+                      : 'Not Listening... Tap And Speek',
                   style: GoogleFonts.nunitoSans(
                     fontSize: 18,
                     fontWeight: FontWeightHelper.semiBold,
@@ -44,7 +54,7 @@ class MicListeningSection extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: onMicTap,
+            onTap: widget.onMicTap,
             child: const CircleAvatar(
               radius: 22,
               backgroundColor: Color(0xFFFFF5DD),

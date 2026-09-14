@@ -13,137 +13,161 @@ class NoteCard extends StatelessWidget {
   final NoteModel note;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: IntrinsicHeight(
-        child: Row(
-          children: [
-            Container(
-              width: 4,
-              decoration: const BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  bottomLeft: Radius.circular(16),
-                ),
-              ),
-            ),
-
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // ── Title ──
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Text(
-                            note.noteTitle ?? '',
-                            style: GoogleFonts.nunitoSans(
-                              fontSize: 17,
-                              fontWeight: FontWeightHelper.bold,
-                              color: AppColors.textPrimary,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            onPressed: () {
-                              final cubit = context.read<NoteStateCubit>();
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (_) {
-                                  return BlocProvider.value(
-                                    value: cubit,
-                                    child: SingleChildScrollView(
-                                      child: EditAndDeletNote(note: note),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            icon: const Icon(Icons.more_vert),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      note.noteDescription ?? '',
-                      style: GoogleFonts.nunitoSans(
-                        fontSize: 14,
-                        fontWeight: FontWeightHelper.regular,
-                        color: AppColors.textSecondary,
-                        height: 1.4,
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 12),
-
-                    // ── Bottom row: Date + Tag ──
-                    Row(
-                      children: [
-                        // ── Date ──
-                        Text(
-                          note.createdAt != null
-                              ? DateFormat(
-                                  'MMM d, yyyy',
-                                ).format(note.createdAt!)
-                              : '',
-                          style: GoogleFonts.nunitoSans(
-                            fontSize: 12,
-                            fontWeight: FontWeightHelper.regular,
-                            color: AppColors.textHint,
-                          ),
-                        ),
-                        const Spacer(),
-                        // ── Tag chip ──
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.secondaryBackground,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            'NOTE',
-                            style: GoogleFonts.nunitoSans(
-                              fontSize: 11,
-                              fontWeight: FontWeightHelper.semiBold,
-                              color: AppColors.textSecondary,
-                              letterSpacing: 0.8,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+    return 
+    // Dismissible(
+    //   key: Key(note.noteId),
+    //   direction: DismissDirection.horizontal,
+    //   onDismissed: (direction) {
+    //     context.read<NoteStateCubit>().deleteNote(note.noteId);
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: Text('${note.noteTitle} deleted'),
+    //         action: SnackBarAction(
+    //           label: 'Undo',
+    //           onPressed: () {
+    //             context.read<NoteStateCubit>().unDo();
+    //           },
+    //         ),
+    //       ),
+    //     );
+    //   },
+    //   background: Container(
+    //     color: AppColors.primary,
+    //     child: const Icon(Icons.delete, color: Colors.white),
+    //   ),
+    //   child: 
+      Container(
+        margin: const EdgeInsets.only(bottom: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-      ),
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              Container(
+                width: 4,
+                decoration: const BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    bottomLeft: Radius.circular(16),
+                  ),
+                ),
+              ),
+    
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ── Title ──
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Text(
+                              note.noteTitle ?? '',
+                              style: GoogleFonts.nunitoSans(
+                                fontSize: 17,
+                                fontWeight: FontWeightHelper.bold,
+                                color: AppColors.textPrimary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              onPressed: () {
+                                final cubit = context.read<NoteStateCubit>();
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (_) {
+                                    return BlocProvider.value(
+                                      value: cubit,
+                                      child: SingleChildScrollView(
+                                        child: EditAndDeletNote(note: note),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              icon: const Icon(Icons.more_vert),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        note.noteDescription ?? '',
+                        style: GoogleFonts.nunitoSans(
+                          fontSize: 14,
+                          fontWeight: FontWeightHelper.regular,
+                          color: AppColors.textSecondary,
+                          height: 1.4,
+                        ),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 12),
+    
+                      // ── Bottom row: Date + Tag ──
+                      Row(
+                        children: [
+                          // ── Date ──
+                          Text(
+                            note.createdAt != null
+                                ? DateFormat(
+                                    'MMM d, yyyy',
+                                  ).format(note.createdAt!)
+                                : '',
+                            style: GoogleFonts.nunitoSans(
+                              fontSize: 12,
+                              fontWeight: FontWeightHelper.regular,
+                              color: AppColors.textHint,
+                            ),
+                          ),
+                          const Spacer(),
+                          // ── Tag chip ──
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.secondaryBackground,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'NOTE',
+                              style: GoogleFonts.nunitoSans(
+                                fontSize: 11,
+                                fontWeight: FontWeightHelper.semiBold,
+                                color: AppColors.textSecondary,
+                                letterSpacing: 0.8,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      // ),
     );
   }
 }

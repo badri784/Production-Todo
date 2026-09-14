@@ -7,6 +7,10 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
+	<string>NSSpeechRecognitionUsageDescription</string>
+	<key>Speech_recognition</key>
+	<string>NSMicrophoneUsageDescription</string>
+	<key>WE need access to microphone for speech recognition</key>
 	<string>Pro Todo</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
