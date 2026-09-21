@@ -12,7 +12,6 @@ class NoteStateCubit extends Cubit<NoteStateState> {
     initSpeechText();
   }
 
-  final SpeechToText speechToText = SpeechToText();
   bool isSpeechAvailable = false;
   bool isListening = false;
   String lastWords = '';
@@ -23,17 +22,37 @@ class NoteStateCubit extends Cubit<NoteStateState> {
 
   //====================================
   Future<void> initSpeechText() async {
-    isSpeechAvailable = await speech.initialize();
-    if (isSpeechAvailable) {
-      isListening = false;
+    try {
+      isSpeechAvailable = await speech.initialize();
+      log(
+        '===========================   Speech available: $isSpeechAvailable   ===========================',
+      );
+      if (isSpeechAvailable) {
+        isListening = false;
+        emit(const NoteStateHasPermission(hasPermission: true));
+      } else {
+        emit(const NoteStateHasPermission(hasPermission: false));
+      }
+    } catch (massage) {
+      emit(const NoteStateHasPermission(hasPermission: false));
     }
   }
 
   void startListening() async {
     try {
-      speech.listen(
+      // If permission was denied before, re-request it when user taps record
+      if (!isSpeechAvailable) {
+        isSpeechAvailable = await speech.initialize();
+        if (!isSpeechAvailable) {
+          // Still denied → tell UI permission is missing
+          emit(const NoteStateHasPermission(hasPermission: false));
+          return;
+        }
+        // Permission just granted
+        emit(const NoteStateHasPermission(hasPermission: true));
+      }
+      await speech.listen(
         localeId: 'ar_EG',
-        // listenFor: const Duration(seconds: 15),
         onResult: (result) {
           lastWords = result.recognizedWords;
           log(lastWords);

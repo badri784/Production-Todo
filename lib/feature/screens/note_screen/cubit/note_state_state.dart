@@ -19,6 +19,10 @@ final class NoteStateError extends NoteStateState {
   final String message;
   const NoteStateError({required this.message});
 }
+final class NoteStateHasPermission extends NoteStateState {
+  final bool hasPermission;
+  const NoteStateHasPermission({required this.hasPermission});
+}
 final class NoteStateListening extends NoteStateState {
 
   const NoteStateListening();

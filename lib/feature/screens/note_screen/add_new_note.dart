@@ -93,7 +93,6 @@ class _AddNewNoteState extends State<AddNewNote> {
             // ── Drag Handle ──
             const DragHandle(),
             const Gap(16),
-
             // ── Mic / Listening Row ──
             MicListeningSection(
               onMicTap: () {
@@ -101,17 +100,6 @@ class _AddNewNoteState extends State<AddNewNote> {
                     ? context.read<NoteStateCubit>().stopListening()
                     : context.read<NoteStateCubit>().startListening();
                 setState(() {});
-              },
-            ),
-            const Gap(20),
-            BlocBuilder<NoteStateCubit, NoteStateState>(
-              builder: (context, state) {
-                if (state is NoteStateListening) {
-                  return Text(
-                    'last words = ${context.read<NoteStateCubit>().lastWords}',
-                  );
-                }
-                return const Text('Not Listening...');
               },
             ),
             const Gap(20),
@@ -133,7 +121,6 @@ class _AddNewNoteState extends State<AddNewNote> {
               ),
             ),
             const Gap(12),
-
             // ── Description Field ──
             CustomTextFormField(
               controller: _descriptionController,

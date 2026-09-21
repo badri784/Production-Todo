@@ -19,4 +19,6 @@ class NoteModel extends HiveObject {
     this.noteDescription,
     this.createdAt,
   }) : noteId = noteId ?? const Uuid().v4();
+
+  
 }
