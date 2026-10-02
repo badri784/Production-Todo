@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -7,11 +8,13 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text('Hello,'),
-      leading: const Padding(
-        padding: EdgeInsets.only(left: 8.0, top: 8.0, bottom: 8.0),
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 8.0, top: 8.0, bottom: 8.0),
         child: CircleAvatar(
-          backgroundImage: NetworkImage(
-            'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+          child: CachedNetworkImage(
+            imageUrl: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+            placeholder: (context, url) => const CircularProgressIndicator(),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
         ),
       ),
@@ -29,3 +32,4 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
+// https://cdn-icons-png.flaticon.com/512/149/149071.png

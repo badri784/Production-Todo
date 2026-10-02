@@ -2,16 +2,20 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
+import 'package:pro_todo/core/servise/ai_assestant/class_ai_note.dart';
 import 'package:pro_todo/core/model/node_model.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 part 'note_state_state.dart';
 
 class NoteStateCubit extends Cubit<NoteStateState> {
-  NoteStateCubit() : super(NoteStateInitial()) {
-    initSpeechText();
+  NoteStateCubit({AiNote? aiNote})
+    : _aiNote = aiNote ?? AiNote(),
+      super(NoteStateInitial()) {
+    init();
   }
 
+  final AiNote _aiNote;
   bool isSpeechAvailable = false;
   bool isListening = false;
   String lastWords = '';
@@ -21,94 +25,119 @@ class NoteStateCubit extends Cubit<NoteStateState> {
   final speech = SpeechToText();
 
   //====================================
-  Future<void> initSpeechText() async {
+  /// Loads notes from Hive, then initializes speech — emits once at the end
+  Future<void> init() async {
     try {
-      isSpeechAvailable = await speech.initialize();
-      log(
-        '===========================   Speech available: $isSpeechAvailable   ===========================',
-      );
-      if (isSpeechAvailable) {
+      emit(NoteStateLoading());
+      // 1. Load notes from Hive
+      final loadedNotes = noteBox.values.toList();
+      notes.addAll(loadedNotes);
+
+      // 2. Init speech silently (no separate emit)
+      try {
+        isSpeechAvailable = await speech.initialize();
         isListening = false;
-        emit(const NoteStateHasPermission(hasPermission: true));
-      } else {
-        emit(const NoteStateHasPermission(hasPermission: false));
+        log(
+          '===========================   Speech available: $isSpeechAvailable   ===========================',
+        );
+      } catch (_) {
+        isSpeechAvailable = false;
       }
-    } catch (massage) {
-      emit(const NoteStateHasPermission(hasPermission: false));
+
+      // 3. Emit the final state with notes
+      emit(NoteStateSuccess(nodeModels: List.from(notes)));
+    } catch (e) {
+      emit(NoteStateError(message: e.toString()));
     }
   }
 
-  void startListening() async {
+  Future<void> startListening() async {
     try {
       // If permission was denied before, re-request it when user taps record
       if (!isSpeechAvailable) {
         isSpeechAvailable = await speech.initialize();
         if (!isSpeechAvailable) {
-          // Still denied → tell UI permission is missing
-          emit(const NoteStateHasPermission(hasPermission: false));
+          emit(
+            const NoteStateError(
+              message:
+                  'Microphone permission denied. Please enable it in settings.',
+            ),
+          );
           return;
         }
-        // Permission just granted
-        emit(const NoteStateHasPermission(hasPermission: true));
       }
       await speech.listen(
         localeId: 'ar_EG',
         onResult: (result) {
           lastWords = result.recognizedWords;
           log(lastWords);
-          emit(const NoteStateListening());
         },
       );
       isListening = true;
-    } catch (massage) {
-      emit(NoteStateError(message: massage.toString()));
+      emit(const NoteStateListening());
+    } catch (e) {
+      emit(NoteStateError(message: e.toString()));
     }
   }
 
-  void stopListening() {
+  Future<void> stopListening() async {
     try {
-      speech.stop();
-      emit(const NoteStateStoping());
+      await speech.stop();
+      // Check if user actually said something
+      if (lastWords.trim().isEmpty) {
+        emit(
+          const NoteStateError(message: 'No speech detected, please try again'),
+        );
+        return;
+      }
       isListening = false;
-    } catch (massage) {
-      emit(NoteStateError(message: massage.toString()));
+      // Show generating state BEFORE calling AI
+      emit(const NoteStateGeneratingNote());
+      final NoteModel noteModel = await _aiNote.extractNote(lastWords);
+
+      // Save the note and emit saved state so UI can auto-pop
+      await _saveNoteInternal(noteModel);
+      emit(NoteStateSavedSuccessfully(noteModel: noteModel));
+
+      // Emit success with updated list so NoteScreenBody refreshes
+      emit(NoteStateSuccess(nodeModels: List.from(notes)));
+
+      // Reset lastWords for next recording
+      lastWords = '';
+    } catch (e) {
+      isListening = false;
+      emit(NoteStateError(message: e.toString()));
     }
   }
 
-  void loadNote(NoteModel nodeModel) {
+  /// Internal save — does NOT emit loading/success (used by stopListening)
+  Future<void> _saveNoteInternal(NoteModel noteModel) async {
+    notes.add(noteModel);
+    await noteBox.put(noteModel.noteId, noteModel);
+    log('Note saved: ${noteModel.noteTitle}');
+  }
+
+  /// Public save — emits loading + success (used by manual Save button)
+  Future<void> saveNote(NoteModel nodeModel) async {
     try {
       emit(NoteStateLoading());
-      final loadedNotes = noteBox.values.toList();
-      notes.addAll(loadedNotes);
-      emit(NoteStateSuccess(nodeModels: notes));
-    } catch (massage) {
-      emit(NoteStateError(message: massage.toString()));
+      await _saveNoteInternal(nodeModel);
+      emit(NoteStateSavedSuccessfully(noteModel: nodeModel));
+
+      // Emit success with updated list so NoteScreenBody refreshes
+      emit(NoteStateSuccess(nodeModels: List.from(notes)));
+    } catch (e) {
+      emit(NoteStateError(message: e.toString()));
     }
   }
 
-  // void unDo() {
-  //   emit(NoteStateSuccess(nodeModels: notes));
-  // }
-
-  void saveNote(NoteModel nodeModel) async {
-    try {
-      emit(NoteStateLoading());
-      notes.add(nodeModel);
-      await noteBox.put(nodeModel.noteId, nodeModel);
-      emit(NoteStateSuccess(nodeModels: notes));
-      log(nodeModel.noteTitle.toString());
-    } catch (massage) {
-      emit(NoteStateError(message: massage.toString()));
-    }
-  }
-
-  void deleteNote(String noteId) async {
+  Future<void> deleteNote(String noteId) async {
     try {
       await noteBox.delete(noteId);
       notes.removeWhere((note) => note.noteId == noteId);
       emit(NoteStateSuccess(nodeModels: notes));
-    } catch (massage) {
-      emit(NoteStateError(message: massage.toString()));
+    } catch (e) {
+      emit(NoteStateError(message: e.toString()));
     }
   }
 
@@ -124,8 +153,8 @@ class NoteStateCubit extends Cubit<NoteStateState> {
             );
       }).toList();
       emit(NoteStateSuccess(nodeModels: filteredNotes));
-    } catch (massage) {
-      emit(NoteStateError(message: massage.toString()));
+    } catch (e) {
+      emit(NoteStateError(message: e.toString()));
     }
   }
 }

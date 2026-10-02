@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:pro_todo/core/model/node_model.dart';
 import 'package:pro_todo/core/model/task_model.dart';
+import 'package:pro_todo/core/servise/ai_assestant/class_ai_note.dart';
 import 'package:pro_todo/core/servise/login_service/login_repo.dart';
 import 'package:pro_todo/core/servise/login_service/login_service.dart';
 
@@ -16,6 +17,7 @@ Future<void> setupDependanceInjection() async {
   getIt.registerSingleton<Box<TaskModel>>(taskBox);
   getIt.registerSingleton<Box<NoteModel>>(noteBox);
   getIt.registerLazySingleton<LoginService>(() => LoginRepo());
+  getIt.registerLazySingleton<AiNote>(() => AiNote());
   dio.options.connectTimeout = const Duration(seconds: 10);
   dio.options.receiveTimeout = const Duration(seconds: 10);
 }

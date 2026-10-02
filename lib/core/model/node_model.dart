@@ -20,5 +20,10 @@ class NoteModel extends HiveObject {
     this.createdAt,
   }) : noteId = noteId ?? const Uuid().v4();
 
-  
+  factory NoteModel.fromJson(Map<String, dynamic> json) => NoteModel(
+    noteId: json['noteId'],
+    noteTitle: json['noteTitle'],
+    noteDescription: json['noteDescription'],
+    createdAt: json['createdAt'],
+  );
 }
