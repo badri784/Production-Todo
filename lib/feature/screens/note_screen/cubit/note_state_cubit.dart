@@ -70,12 +70,13 @@ class NoteStateCubit extends Cubit<NoteStateState> {
         localeId: 'ar_EG',
         onResult: (result) {
           lastWords = result.recognizedWords;
-          log(lastWords);
+          log('lastWords from startListening: $lastWords');
         },
       );
       isListening = true;
       emit(const NoteStateListening());
     } catch (e) {
+      log('Error in startListening: ${e.toString()}');
       emit(NoteStateError(message: e.toString()));
     }
   }
@@ -83,29 +84,31 @@ class NoteStateCubit extends Cubit<NoteStateState> {
   Future<void> stopListening() async {
     try {
       await speech.stop();
-      // Check if user actually said something
+      log('lastWords: $lastWords');
+      isListening = false;
       if (lastWords.trim().isEmpty) {
         emit(
           const NoteStateError(message: 'No speech detected, please try again'),
         );
         return;
+      } else {
+        // Show generating state BEFORE calling AI
+        emit(const NoteStateGeneratingNote());
+        final NoteModel noteModel = await _aiNote.extractNote(lastWords);
+
+        // Save the note and emit saved state so UI can auto-pop
+        await _saveNoteInternal(noteModel);
+        emit(NoteStateSavedSuccessfully(noteModel: noteModel));
+
+        // Emit success with updated list so NoteScreenBody refreshes
+        emit(NoteStateSuccess(nodeModels: List.from(notes)));
+
+        // Reset lastWords for next recording
+        lastWords = '';
       }
-      isListening = false;
-      // Show generating state BEFORE calling AI
-      emit(const NoteStateGeneratingNote());
-      final NoteModel noteModel = await _aiNote.extractNote(lastWords);
-
-      // Save the note and emit saved state so UI can auto-pop
-      await _saveNoteInternal(noteModel);
-      emit(NoteStateSavedSuccessfully(noteModel: noteModel));
-
-      // Emit success with updated list so NoteScreenBody refreshes
-      emit(NoteStateSuccess(nodeModels: List.from(notes)));
-
-      // Reset lastWords for next recording
-      lastWords = '';
     } catch (e) {
       isListening = false;
+      log('Error in stopListening: ${e.toString()}');
       emit(NoteStateError(message: e.toString()));
     }
   }

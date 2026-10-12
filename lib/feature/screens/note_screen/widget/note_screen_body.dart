@@ -1,12 +1,12 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pro_todo/core/theme/app_colors.dart';
 import 'package:pro_todo/feature/screens/note_screen/add_new_note.dart';
 import 'package:pro_todo/feature/screens/note_screen/cubit/note_state_cubit.dart';
 import 'package:pro_todo/feature/screens/note_screen/widget/empty_state.dart';
-import 'package:pro_todo/feature/screens/note_screen/widget/note_card.dart';
+import 'package:pro_todo/feature/screens/note_screen/widget/error_state.dart';
+import 'package:pro_todo/feature/screens/note_screen/widget/success_state.dart';
 import 'package:pro_todo/feature/widget/floating_action_bottom_widget.dart';
 
 class NoteScreenBody extends StatefulWidget {
@@ -83,41 +83,11 @@ class _NoteScreenBodyState extends State<NoteScreenBody> {
           }
 
           if (state is NoteStateError) {
-            return Center(
-              child: Text(
-                state.message,
-                style: GoogleFonts.nunitoSans(
-                  fontSize: 16,
-                  color: AppColors.error,
-                ),
-              ),
-            );
+            return ErrorState(state: state);
           }
 
           if (state is NoteStateSuccess && state.nodeModels.isNotEmpty) {
-            return Padding(
-              padding: const EdgeInsets.only(right: 4.0),
-              child: Scrollbar(
-                controller: scrollController,
-                trackVisibility: true,
-                thumbVisibility: true,
-                interactive: true,
-                thickness: 2,
-                radius: const Radius.circular(4),
-                child: ListView.builder(
-                  controller: scrollController,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  itemCount: state.nodeModels.length,
-                  itemBuilder: (context, index) {
-                    final note = state.nodeModels[index];
-                    return NoteCard(note: note);
-                  },
-                ),
-              ),
-            );
+            return NoteScreenSuccessState(scrollController: scrollController, state: state,);
           }
 
           // ── Empty state ──

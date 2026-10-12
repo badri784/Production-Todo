@@ -14,7 +14,7 @@ class AiNote {
       final GenerativeModel model;
       model = GenerativeModel(
         model: 'gemini-3.6-flash',
-        apiKey: 'AQ.Ab8RN6JqBle7QrKN8S0APS2-WrwxQlJZBms5KzKutkZRYwpGuw',
+        apiKey: 'AIzaSyCBaHNA_lNocnjKwqkevc-QUf0jQaupvys',
         generationConfig: GenerationConfig(
           responseMimeType: 'application/json',
         ),
