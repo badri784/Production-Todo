@@ -63,7 +63,7 @@ class _NoteScreenBodyState extends State<NoteScreenBody> {
         onPressed: () => onPressed(context),
       ),
       appBar: AppBar(
-        title: const Text('Your Notes'),
+        title: const Text('My Notes'),
         backgroundColor: AppColors.background,
         surfaceTintColor: Colors.transparent,
         actions: [
@@ -87,7 +87,10 @@ class _NoteScreenBodyState extends State<NoteScreenBody> {
           }
 
           if (state is NoteStateSuccess && state.nodeModels.isNotEmpty) {
-            return NoteScreenSuccessState(scrollController: scrollController, state: state,);
+            return NoteScreenSuccessState(
+              scrollController: scrollController,
+              state: state,
+            );
           }
 
           // ── Empty state ──
